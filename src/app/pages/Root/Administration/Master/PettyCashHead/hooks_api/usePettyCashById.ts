@@ -1,0 +1,42 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+import pettyCashClient from "@/services/pettyCashClient";
+import { FetchedPettyCashType } from "@/types/pettyCash";
+
+export function usePettyCashDataById(id: number | null) {
+    const {
+      data: pettyCash,
+      isLoading,
+      error,
+      isError,
+    } = useQuery<FetchedPettyCashType>({
+      queryKey: ['pettyCash', id], // ✅ Unique key for caching and refetching
+      queryFn: async () => {
+        if (id === null) throw new Error('Invalid PettyCash ID')
+        return await pettyCashClient.getPettyCashById({ id })
+      },
+      enabled: !!id, // ✅ ID jab tak valid nahi hai tab tak fetch nahi karega
+      staleTime: 3 * 60 * 1000, // ✅ 5 min tak data fresh rahega
+    })
+  
+    return { pettyCash, isLoading, error: isError ? error.message : null }
+  }
+
+
+export function useFetchPettyCashById() {
+    const queryClient = useQueryClient();
+  
+    const fetchPettyCashById = async (id: number) => {
+      if (!id) throw new Error('Invalid PettyCash ID');
+  
+      const data = await queryClient.fetchQuery<FetchedPettyCashType>({
+        queryKey: ['pettyCash', id],
+        queryFn: async () => await pettyCashClient.getPettyCashById({ id }),
+        staleTime: 5 * 60 * 1000,  // ✅ 5 min cache
+      });
+  
+      return data;
+    };
+  
+    return { fetchPettyCashById };
+  }

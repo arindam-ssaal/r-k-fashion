@@ -1,0 +1,2 @@
+import GoodsReceiptStoreModal from './GoodsReceiptStoreModal'
+export default GoodsReceiptStoreModal

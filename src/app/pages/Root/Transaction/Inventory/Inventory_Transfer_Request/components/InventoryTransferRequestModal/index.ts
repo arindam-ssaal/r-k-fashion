@@ -1,0 +1,3 @@
+import InventoryTransferRequestModal from "./InventoryTransferRequestModal"
+
+export default InventoryTransferRequestModal

@@ -1,0 +1,2 @@
+import DiscountMasterTableViewer from "./DiscountMasterTableViewer"
+export default DiscountMasterTableViewer

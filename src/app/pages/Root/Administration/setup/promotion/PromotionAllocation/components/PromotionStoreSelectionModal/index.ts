@@ -1,0 +1,3 @@
+import PromotionStoreSelectionModal from "./PromotionStoreSelectionModal";
+
+export default PromotionStoreSelectionModal

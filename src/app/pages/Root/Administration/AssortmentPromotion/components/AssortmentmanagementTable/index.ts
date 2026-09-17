@@ -1,0 +1,2 @@
+import AssortmentmanagementTwoTable from "./AssortmentmanagementTable"
+export default AssortmentmanagementTwoTable

@@ -1,0 +1,28 @@
+git add . -> starts tot track the files
+git commit -m "message" commiting the files
+git push -> pushing the code to the activated remote branch 
+git push origin  main ->   pushing the code to the dedicated remote branch which is main
+git pull -> pulling the code from the activated remote branch  
+git pull origin main -> pulling the code from the dedicated remote branch  which is main
+
+
+
+Branching stuff
+
+git branch -> gives all branches (local branches )
+git checkout -b <branch name> -> creating and switch to that branch
+git checkout main -> swithcing to main branch
+git checkout <branchname> -> switching to created branch
+git push origin  <brnach name> -> Push the New Branch to GitHub
+git branch -d <brnach name> -> Delete the Feature Branch Locally
+git push origin --delete <brnach name> -> Delete a branch from the remote repository (GitHub)
+
+
+
+
+git naming convetions
+
+feature/
+designfix/
+refactor/
+bugfix/

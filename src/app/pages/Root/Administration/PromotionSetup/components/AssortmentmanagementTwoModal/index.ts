@@ -1,0 +1,3 @@
+import AssortmentmanagementTwoModal from "./AssortmentmanagementTwoModal"
+
+export default AssortmentmanagementTwoModal

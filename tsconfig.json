@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "strict": false,
+    "noEmit": false,
+    "skipLibCheck": true,
+    "isolatedModules": false,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "files": [],
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
+}

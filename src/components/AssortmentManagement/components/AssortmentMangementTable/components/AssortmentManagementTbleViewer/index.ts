@@ -1,0 +1,2 @@
+import AssortmentManagementTableViewer from "./AssortmentManagementTbleViewer"
+export default AssortmentManagementTableViewer

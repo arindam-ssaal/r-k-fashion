@@ -1,0 +1,8 @@
+{
+    "build": {
+      "env": {
+        "IGNORE_BUILD_ERRORS": "true"
+      }
+    }
+  }
+  

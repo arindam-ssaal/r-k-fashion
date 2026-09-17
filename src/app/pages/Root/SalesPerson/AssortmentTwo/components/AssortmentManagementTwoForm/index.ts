@@ -1,0 +1,3 @@
+import AssortmentManagementTwoForm from "./AssortmentManagementTwoForm"
+
+export default AssortmentManagementTwoForm

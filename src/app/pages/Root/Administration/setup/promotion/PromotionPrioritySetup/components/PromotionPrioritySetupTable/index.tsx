@@ -1,0 +1,2 @@
+import PromotionPrioritySetupTable from "./PromotionPrioritySetupTable"
+export default PromotionPrioritySetupTable

@@ -1,0 +1,164 @@
+{
+  "products": [
+    {
+      "id": "INV001",
+      "itemName": "Laptop",
+      "uom": "pcs",
+      "mrp": 50000,
+      "gst": 18,
+      "amount": 59000
+    },
+    {
+      "id": "INV002",
+      "itemName": "Mobile Phone",
+      "uom": "pcs",
+      "mrp": 30000,
+      "gst": 12,
+      "amount": 33600
+    },
+    {
+      "id": "INV003",
+      "itemName": "Headphones",
+      "uom": "pcs",
+      "mrp": 2000,
+      "gst": 18,
+      "amount": 2360
+    },
+    {
+      "id": "INV004",
+      "itemName": "Tablet",
+      "uom": "pcs",
+      "mrp": 25000,
+      "gst": 12,
+      "amount": 28000
+    },
+    {
+      "id": "INV005",
+      "itemName": "Smart Watch",
+      "uom": "pcs",
+      "mrp": 15000,
+      "gst": 12,
+      "amount": 16800
+    },
+    {
+      "id": "INV006",
+      "itemName": "Smart TV",
+      "uom": "pcs",
+      "mrp": 14000,
+      "gst": 10,
+      "amount": 34800
+    },
+    {
+      "id": "INV007",
+      "itemName": "Omnitrix",
+      "uom": "pcs",
+      "mrp": 14000,
+      "gst": 10,
+      "amount": 34800
+    },
+    {
+      "id": "INV008",
+      "itemName": "Gauntlet",
+      "uom": "pcs",
+      "mrp": 12000,
+      "gst": 10,
+      "amount": 300
+    }
+  ],
+
+  "users": [
+    {
+      "id": 3243223,
+      "phoneNo": 9831118702,
+      "memberId": "00990099",
+      "memberName": "BPD"
+    },
+    {
+      "id": 32554223,
+      "phoneNo": 8777524967,
+      "memberId": "2324204",
+      "memberName": "TD"
+    },
+    {
+      "id": 32443433,
+      "phoneNo": 9748993112,
+      "memberId": "0099442429",
+      "memberName": "SD"
+    }
+  ],
+  "customers":[
+    {
+      "customerID": 1,
+      "customerFirstName": "Dipankar",
+      "customerMiddleName": "Kumar",
+      "customerLastName": "Basu",
+      "gender": "M",
+      "mobile": "1234567890",
+      "dateOfBirth": "12/13/2001 12:00:00 AM",
+      "anniversary": "12/13/2013 12:00:00 AM",
+      "profession": "Functional",
+      "spouseName": "Sarbari Basu",
+      "panNo": "DF567YH654RT43",
+      "gstRegNo": "DF567YH654RT43",
+      "gstRegDate": "12/12/2020 12:00:00 AM",
+      "isEmployee": "N",
+      "employeeID": "E001",
+      "address": "KOlkata",
+      "area": "kolkata",
+      "city": "kolkata",
+      "pinCode": "700001",
+      "state": "West Bengal",
+      "email": "string",
+      "whatsAppNo": "1234567890",
+      "alternatePhnNo": "1234567890",
+      "preferredComMode": "P",
+      "isPushMessage": "N",
+      "customerCatCode": "R",
+      "customerCatName": "Rec",
+      "membershipCategoryCode": "S",
+      "membershipCategoryName": "Silver",
+      "membershipNo": "4567890",
+      "validTill": "1/4/2025 12:00:00 AM",
+      "enteredBy": 1,
+      "usedFor": null
+    },
+    {
+      "customerID": 2,
+      "customerFirstName": "Dipankar",
+      "customerMiddleName": "Kumar",
+      "customerLastName": "Basu",
+      "gender": "M",
+      "mobile": "1234567890",
+      "dateOfBirth": "12/13/2001 12:00:00 AM",
+      "anniversary": "12/13/2013 12:00:00 AM",
+      "profession": "Functional",
+      "spouseName": "Sarbari Basu",
+      "panNo": "DF567YH654RT43",
+      "gstRegNo": "DF567YH654RT43",
+      "gstRegDate": "12/12/2020 12:00:00 AM",
+      "isEmployee": "N",
+      "employeeID": "E001",
+      "address": "KOlkata",
+      "area": "kolkata",
+      "city": "kolkata",
+      "pinCode": "700001",
+      "state": "West Bengal",
+      "email": "string",
+      "whatsAppNo": "1234567890",
+      "alternatePhnNo": "1234567890",
+      "preferredComMode": "P",
+      "isPushMessage": "N",
+      "customerCatCode": "R",
+      "customerCatName": "Rec",
+      "membershipCategoryCode": "S",
+      "membershipCategoryName": "Silver",
+      "membershipNo": "4567890",
+      "validTill": "1/4/2025 12:00:00 AM",
+      "enteredBy": 1,
+      "usedFor": null
+    }
+
+  ]
+
+
+}

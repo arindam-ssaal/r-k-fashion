@@ -1,0 +1,3 @@
+import PromotionFormAssortmentTable from "./PromotionFormAssortmentTable";
+
+export default PromotionFormAssortmentTable

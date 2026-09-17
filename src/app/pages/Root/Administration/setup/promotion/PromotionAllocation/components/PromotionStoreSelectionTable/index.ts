@@ -1,0 +1,3 @@
+import PromotionStoreSelectionTable from "./PromotionStoreSelectionTable";
+
+export default PromotionStoreSelectionTable

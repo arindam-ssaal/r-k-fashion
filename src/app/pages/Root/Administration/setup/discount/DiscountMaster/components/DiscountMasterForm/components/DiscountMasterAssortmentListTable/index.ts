@@ -1,0 +1,3 @@
+import DiscountMasterAssortmentListTable from "./DiscountMasterAssortmentListTable";
+
+export default DiscountMasterAssortmentListTable

@@ -1,0 +1,22 @@
+
+.excel-preview table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+
+.excel-preview th,
+.excel-preview td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.excel-preview th {
+  background-color: #f4f6f9;
+  font-weight: 600;
+}
+
+.excel-preview tr:nth-child(even) {
+  background-color: #fafafa;
+}

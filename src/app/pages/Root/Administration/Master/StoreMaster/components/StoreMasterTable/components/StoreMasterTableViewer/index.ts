@@ -1,0 +1,2 @@
+import StoreMasterTableViewer from "./StoreMasterTableViewer"
+export default StoreMasterTableViewer

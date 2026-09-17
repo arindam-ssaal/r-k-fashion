@@ -1,0 +1,2 @@
+import AssortmentAllocationStoreForm from "./AssortmentAllocationStoreForm"
+export default AssortmentAllocationStoreForm

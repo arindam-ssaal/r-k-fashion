@@ -1,0 +1,3 @@
+import DiscountMasterAssortmentList from './DiscountMasterAssortmentList'
+
+export default DiscountMasterAssortmentList

@@ -1,0 +1,3 @@
+import DiscountMasterSetupAssortmentModal from "./DiscountMasterSetupAssortmentModal";
+
+export default DiscountMasterSetupAssortmentModal
