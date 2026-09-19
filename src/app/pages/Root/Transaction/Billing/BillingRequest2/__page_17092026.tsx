@@ -1464,18 +1464,9 @@ const BillingRequest2 = () => {
         )
         //console.log(hasEmptyDiscount, "-", updatedScannedItemListDataWRTPromo)
 
-        // [DISC%] Discount not yet applied by THIS discount -> recalculate.
-        // Covers: fresh apply (discountPrice === '') AND switching from one discount to another
-        // (rows still carry the old discount's discAppliedID). User edits of the same discount are kept.
-        const isDiscNotYetApplied =
-          hasEmptyDiscount ||
-          updatedScannedItemListDataWRTPromo.some(
-            (item) => item.discAppliedID !== storedDiscount.discountID
-          )
-
         //Note: Over Each Item
         if (
-          isDiscNotYetApplied &&
+          hasEmptyDiscount &&
           storedDiscount.discountType === 'G' &&
           storedDiscount.appliedOn === 'I'
         ) {
@@ -1542,22 +1533,13 @@ const BillingRequest2 = () => {
               taxAmount,
               taxableAmount,
               totalPrice,
-              // [DISC%] Row-level UI state (not saved / not sent to API)
-              discPercent: storedDiscount.discountBase === 'P' ? Number(storedDiscount.discountValue) || 0 : null,
-              discPercentInput: undefined,
-              discChecked: true,
-              discAppliedID: storedDiscount.discountID,
             }
           })
           setScannedItemListData(updatedItems)
         }
 
         //Note: Over Total Bill Amount
-        if (
-          isDiscNotYetApplied &&
-          storedDiscount.discountType === 'G' &&
-          storedDiscount.appliedOn === 'L'
-        ) {
+        if (storedDiscount.discountType === 'G' && storedDiscount.appliedOn === 'L') {
           //const updatedScannedItemListData = scannedItemListData.map(item => ({
           const updatedScannedItemListData = updatedScannedItemListDataWRTPromo.map((item) => ({
             ...item,
@@ -1619,11 +1601,6 @@ const BillingRequest2 = () => {
               taxAmount,
               taxableAmount,
               totalPrice,
-              // [DISC%] Row-level UI state (not saved / not sent to API)
-              discPercent: storedDiscount.discountBase === 'P' ? Number(storedDiscount.discountValue) || 0 : null,
-              discPercentInput: undefined,
-              discChecked: true,
-              discAppliedID: storedDiscount.discountID,
             }
           })
           setScannedItemListData(updatedItems)
@@ -1972,130 +1949,6 @@ const BillingRequest2 = () => {
       toggleApplyDiscountModal()
     }
   }
-  //! [DISC%] ================= Discount % with Allow to Change =================
-  const discRound2 = (n) => parseFloat((Number(n) || 0).toFixed(2))
-
-  // Same tax logic as the existing discount useEffect
-  const buildDiscountRow = (item, discountPrice) => {
-    const totalPrice = parseFloat(((item.mrp * item.quantity) - discountPrice).toFixed(2))
-    const effectiveMrp = item.mrp - discountPrice
-    let taxRateUpdatedCalculated = 0
-    if (item.gstUpperLimit === 0) {
-      taxRateUpdatedCalculated = item.taxRateOriginal
-    } else if (item.gstUpperLimit > 0 && effectiveMrp < item.gstUpperLimit) {
-      taxRateUpdatedCalculated = item.taxRateOriginal
-    } else if (item.gstUpperLimit > 0 && effectiveMrp >= item.gstUpperLimit) {
-      taxRateUpdatedCalculated = item.gstSlabRate
-    }
-    const taxRateUpdated = taxRateUpdatedCalculated
-    const taxAmount = (
-      (effectiveMrp / (100 + taxRateUpdated)) *
-      taxRateUpdated *
-      item.quantity
-    ).toFixed(2)
-    const taxableAmount = (
-      (effectiveMrp / (100 + taxRateUpdated)) *
-      100 *
-      item.quantity
-    ).toFixed(2)
-    return {
-      ...item,
-      discountPrice,
-      taxRate: taxRateUpdated,
-      taxRateUpdated,
-      taxAmount,
-      taxableAmount,
-      totalPrice,
-    }
-  }
-
-  const isRowDiscApplied = (item) =>
-    !!storedDiscount &&
-    item.discountPrice !== '' &&
-    item.discountPrice !== undefined &&
-    item.discountPrice !== null &&
-    item.discAppliedID === storedDiscount.discountID &&
-    storedDiscount.discountBase === 'P'
-
-  const isDiscPctEditable = storedDiscount?.allowToChange === 'Y'
-
-  const handleRowDiscPercentChange = (index, rawValue) => {
-    if (!storedDiscount) return
-    const value = String(rawValue ?? '').trim()
-    const maxPct = Number(storedDiscount.discountValue) || 0
-
-    // Allow clearing the box while typing (discount stays at last valid value)
-    if (value === '') {
-      setScannedItemListData((prev) =>
-        prev.map((it, i) => (i === index ? { ...it, discPercentInput: '' } : it))
-      )
-      return
-    }
-    // Only numbers with up to 2 decimals
-    if (!/^\d*\.?\d{0,2}$/.test(value)) return
-
-    const pct = parseFloat(value)
-    if (isNaN(pct)) {
-      setScannedItemListData((prev) =>
-        prev.map((it, i) => (i === index ? { ...it, discPercentInput: value } : it))
-      )
-      return
-    }
-    if (pct < 0 || pct > maxPct) {
-      toast.error(`Discount % cannot be more than ${maxPct}%.`, {
-        style: { backgroundColor: '#f7edeb', color: '#ff6242' },
-      })
-      return
-    }
-
-    setScannedItemListData((prev) =>
-      prev.map((it, i) => {
-        if (i !== index) return it
-        const discountPrice = discRound2(((it.mrp * pct) / 100) * it.quantity)
-        return {
-          ...buildDiscountRow(it, discountPrice),
-          discPercent: pct,
-          discPercentInput: value,
-          discChecked: true,
-        }
-      })
-    )
-  }
-
-  const handleRowDiscPercentBlur = (index) => {
-    setScannedItemListData((prev) =>
-      prev.map((it, i) => (i === index ? { ...it, discPercentInput: undefined } : it))
-    )
-  }
-
-  const handleRowDiscCheckToggle = (index, checked) => {
-    if (!storedDiscount) return
-    const defaultPct = Number(storedDiscount.discountValue) || 0
-
-    setScannedItemListData((prev) =>
-      prev.map((it, i) => {
-        if (i !== index) return it
-        if (!checked) {
-          // Unchecked: no discount on this row, full price
-          return {
-            ...buildDiscountRow(it, 0),
-            discChecked: false,
-            discPercentInput: undefined,
-          }
-        }
-        // Re-checked: default % of the selected discount
-        const discountPrice = discRound2(((it.mrp * defaultPct) / 100) * it.quantity)
-        return {
-          ...buildDiscountRow(it, discountPrice),
-          discPercent: defaultPct,
-          discPercentInput: undefined,
-          discChecked: true,
-        }
-      })
-    )
-  }
-  //! [DISC%] ================= End Discount % =================
-
   const handleApplyRecallBill = () => {
     //console.log("selectedRecallBillID=>",selectedRecallBillID);
     fetchSelectedBillDeatilsList(selectedRecallBillID)
@@ -2400,7 +2253,6 @@ const BillingRequest2 = () => {
       }
 
       // Prepare bill details (same as original handleSaveBill)
-      console.log("OGN=>",scannedItemListData)
       const objDetails = scannedItemListData.map((item, index) => ({
         billID: 0,
         lineNum: index + 1,
@@ -2409,8 +2261,6 @@ const BillingRequest2 = () => {
         barcode: item?.barCode || '',
         mrp: item?.mrp || 0,
         rsp: item?.retailPrice || 0,
-        //discountPercentage: item?.discPercent|| 0,
-        discountPercentage: item?.discChecked === true && item?.discountPrice ? (item?.discPercent|| 0) : 0,
         discountAmt: item?.discountPrice || 0,
         promotionAmt: item?.promoPrice || 0,
         netPrice: item?.retailPrice || 0,
@@ -2422,8 +2272,7 @@ const BillingRequest2 = () => {
         remarks: item?.remarks || '',
         hsNorSACcode: item?.hsnsacCode || '',
         promotionID: storedPromotion?.promotionID || 0,
-        //disCountID: storedDiscount?.discountID || 0,
-        disCountID: item?.discChecked === true && item?.discountPrice && item?.discPercent ? (storedDiscount?.discountID || 0) : 0,
+        disCountID: storedDiscount?.discountID || 0,
         originalBillID: 0,
         originalBillLineNum: 0,
         returnBillID:
@@ -4087,7 +3936,6 @@ const BillingRequest2 = () => {
     }
 
     setIsBtnSaving(true)
-    console.log("OGN 2=>",scannedItemListData)
     const objDetails = scannedItemListData.map((item, index) => ({
       billID: 0,
       lineNum: index + 1,
@@ -4096,8 +3944,6 @@ const BillingRequest2 = () => {
       barcode: item?.barCode || '',
       mrp: item?.mrp || 0,
       rsp: item?.retailPrice || 0,
-      //discountPercentage: item?.discPercent|| 0,
-      discountPercentage: item?.discChecked === true && item?.discountPrice ? (item?.discPercent|| 0) : 0,
       discountAmt: item?.discountPrice || 0,
       promotionAmt: item?.promoPrice || 0,
       netPrice: item?.retailPrice || 0,
@@ -4109,8 +3955,7 @@ const BillingRequest2 = () => {
       remarks: item?.remarks || '',
       hsNorSACcode: item?.hsnsacCode || '',
       promotionID: item?.promotionID || 0, //storedPromotion?.promotionID || 0,
-      //disCountID: storedDiscount?.discountID || 0,
-      disCountID: item?.discChecked === true && item?.discountPrice && item?.discPercent ? (storedDiscount?.discountID || 0) : 0,
+      disCountID: storedDiscount?.discountID || 0,
       originalBillID: 0,
       originalBillLineNum: 0,
       returnBillID:
@@ -4584,7 +4429,6 @@ const BillingRequest2 = () => {
     }
 
     setIsBtnSaving(true)
-    console.log("OGN 3=>",scannedItemListData)
     const objDetails = scannedItemListData.map((item, index) => ({
       billID: 0,
       lineNum: index + 1,
@@ -4593,8 +4437,6 @@ const BillingRequest2 = () => {
       barcode: item?.barCode || '',
       mrp: item?.mrp || 0,
       rsp: item?.retailPrice || 0,
-      //discountPercentage: item?.discPercent|| 0,
-      discountPercentage: item?.discChecked === true && item?.discountPrice ? (item?.discPercent|| 0) : 0,
       discountAmt: item?.discountPrice || 0,
       promotionAmt: item?.promoPrice || 0,
       netPrice: item?.retailPrice || 0,
@@ -4606,8 +4448,7 @@ const BillingRequest2 = () => {
       remarks: item?.remarks || '',
       hsNorSACcode: item?.hsnsacCode || '',
       promotionID: storedPromotion?.promotionID || 0,
-      //disCountID: storedDiscount?.discountID || 0,
-      disCountID: item?.discChecked === true && item?.discountPrice && item?.discPercent ? (storedDiscount?.discountID || 0) : 0,
+      disCountID: storedDiscount?.discountID || 0,
       originalBillID: 0,
       originalBillLineNum: 0,
       returnBillID: 0, //(selectedRecallBillData?.length > 0 && item?.lineNum) ? selectedRecallBillData[0]?.billID : 0,
@@ -6731,7 +6572,6 @@ const BillingRequest2 = () => {
                   {/* <TableHead className="w-20 text-xs text-right">Rate</TableHead> */}
                   <TableHead className="w-20 text-xs text-right text-white">Qty.</TableHead>
                   <TableHead className="w-24 text-xs text-right text-white">MRP</TableHead>
-                  <TableHead className="w-28 text-xs text-center text-white">Discount %</TableHead>
                   <TableHead className="w-24 text-xs text-right text-white">Discount</TableHead>
                   <TableHead className="w-24 text-xs text-right text-white">Promotion</TableHead>
                   <TableHead className="w-28 text-xs text-right text-white">Net Payable</TableHead>
@@ -6852,44 +6692,6 @@ const BillingRequest2 = () => {
                           {/* <TableCell className="text-right text-xs">{item.retailPrice}</TableCell> */}
                           <TableCell className="w-20 text-xs text-right">{item.quantity}</TableCell>
                           <TableCell className="w-24 text-xs text-right">{item.mrp}</TableCell>
-                          {/* [DISC%] Discount % column */}
-                          <TableCell className="w-28 text-xs text-center">
-                            {!isRowDiscApplied(item) ? (
-                              '-'
-                            ) : isDiscPctEditable ? (
-                              <div
-                                className="flex items-center justify-center gap-1"
-                                onClick={(e) => e.stopPropagation()}
-                                onKeyDown={(e) => e.stopPropagation()}
-                              >
-                                <input
-                                  type="checkbox"
-                                  className="w-3 h-3 cursor-pointer accent-[#0A6ED1]"
-                                  checked={item.discChecked !== false}
-                                  onChange={(e) => handleRowDiscCheckToggle(index, e.target.checked)}
-                                  title="Apply discount on this item"
-                                />
-                                <input
-                                  type="text"
-                                  inputMode="decimal"
-                                  className="w-12 h-6 px-1 text-xs text-right text-gray-800 border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-[#0A6ED1] disabled:bg-gray-100 disabled:text-gray-400"
-                                  value={
-                                    item.discChecked === false
-                                      ? '' // [DISC%] unchecked: full price, so keep the box empty
-                                      : item.discPercentInput !== undefined
-                                        ? item.discPercentInput
-                                        : String(item.discPercent ?? '')
-                                  }
-                                  disabled={item.discChecked === false}
-                                  onChange={(e) => handleRowDiscPercentChange(index, e.target.value)}
-                                  onBlur={() => handleRowDiscPercentBlur(index)}
-                                />
-                                <span className="text-gray-600">%</span>
-                              </div>
-                            ) : (
-                              `${item.discPercent ?? ''}%`
-                            )}
-                          </TableCell>
                           <TableCell className="w-24 text-right text-xs">
                             {item.discountPrice > 0 ? `${item.discountPrice.toFixed(2)}` : '-'}
                           </TableCell>
